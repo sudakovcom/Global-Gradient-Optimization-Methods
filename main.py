@@ -1,120 +1,93 @@
-from sympy import *
-from sympy.abc import x
-from interval import imath
-from interval import fpu
-from interval import interval
+import numpy as np
+from numpy import linalg as LA
+import math
 
 
 def F(x):
-    return (6 * imath.exp(x) / x + imath.sin(x) * x - imath.cos(x) * x * x) / x / x
+    return (x[0] ** 2) / 2 - (x[1] ** 2) / 4 + 3
 
 
-def F2(set):
-    return (set[0] * set[0]) + (set[0] * set[1]) - (set[1] * set[1]) + set[0]
+def Gradient(p, f, step):
+    gradient = np.array([None] * len(p))
+    for i in range(len(p)):
+        p_ = p.copy()
+        p_[i] += step
+        gradient[i] = (f(p_) - f(p)) / step
+    return gradient
 
 
-def F1(set):
-    return (6 * imath.exp(set[0]) / set[0] + imath.sin(set[0]) * set[0] - imath.cos(set[0]) * set[0] * set[0]) / set[0] / set[0]
+def r(p_1, p_2):
+    r_ = 0
+    for i in range(len(p_1)):
+        r_ += (p_1[i] - p_2[i]) ** 2
+    return math.sqrt(r_)
 
 
-def Multidimensional_Moore_Skelboe(e, set_d):
-    interval_e = F2(set_d)
-    list_of_intervals = [[set_d, interval_e]]
+def argmin1(f, gradient, D, p, e):  # f(function), i(index of direction), a(left border), b(right border), p(current point), e(error)
+    phi = (1 + math.sqrt(5)) / 2  # constant of golden ratio
+    borders = Borders(p, gradient, D)
+    a = borders[0]
+    b = borders[1]
+    p_1 = b - (b - a) / phi
+    p_2 = a + (b - a) / phi
+    f_1 = f(p_1)  # value in 1-st point
+    f_2 = f(p_2)  # value in 2-nd point
+    while np.linalg.norm(b - a) > e:  # termination criteria
+        if f_1 <= f_2:
+            b = p_2
+            p_2 = p_1
+            p_1 = b - (b - a) / phi
 
-    U = fpu.max(interval_e)[1]
-    w = fpu.max(interval_e)[1] - fpu.max(interval_e)[0]
-    best_set = list_of_intervals[0]
+            f_2 = f_1
+            f_1 = f(p_1)
+        else:
+            a = p_1
+            p_1 = p_2
+            p_2 = a + (b - a) / phi
 
-    while w > e:
-        list_of_intervals.pop(0)
-        set_1 = best_set[0].copy()
-        set_2 = best_set[0].copy()
-        sep_index = 0
-        max_len = fpu.max(best_set[0][0])[1] - fpu.max(best_set[0][0])[0]
-        for i in range(len(best_set[0])):
-            if max_len < fpu.max(best_set[0][i])[1] - fpu.max(best_set[0][i])[0]:
-                max_len = fpu.max(best_set[0][i])[1] - fpu.max(best_set[0][i])[0]
-                sep_index = i
-
-        mid = (fpu.max(best_set[0][sep_index])[0] + fpu.max(best_set[0][sep_index])[1]) / 2
-
-        set_1[sep_index] = interval[fpu.max(set_1[sep_index])[0], mid]
-        set_2[sep_index] = interval[mid, fpu.max(set_2[sep_index])[1]]
-
-        interval_1e = F2(set_1)
-        interval_2e = F2(set_2)
-        U = min(U, fpu.max(interval_1e)[1])
-        U = min(U, fpu.max(interval_2e)[1])
-        list_of_intervals.append([set_1, interval_1e])
-        list_of_intervals.append([set_2, interval_2e])
-        for el in list_of_intervals:
-            if U < fpu.max(el[1])[0]:
-                list_of_intervals.remove(el)
-        list_of_intervals.sort(key=lambda item: fpu.max(item[1])[0])
-        best_set = list_of_intervals[0]
-        w = fpu.max(best_set[0][1])[1] - fpu.max(best_set[0][1])[0]
-    return list_of_intervals[0]
+            f_1 = f_2
+            f_2 = f(p_2)
+    mid = p_1
+    for i in range(len(mid)):
+        mid[i] = (p_1[i] + p_2[i]) / 2
+    return mid  # point of extremum with error e
 
 
-def Moore_Skelboe(e, interval_d):
-    interval_e = F(interval_d)
-    list_of_intervals = [[interval_d, interval_e]]
-    U = fpu.max(interval_e)[1]
-    w = len(interval_e)
-    best_interval = list_of_intervals[0]
-    while w > e:
-        list_of_intervals.pop(0)
-        mid = (fpu.max(best_interval[0])[0] + fpu.max(best_interval[0])[1]) / 2
-        interval_1 = interval[fpu.max(best_interval[0])[0], mid]
-        interval_1e = F(interval_1)
-        interval_2 = interval[mid, fpu.max(best_interval[0])[1]]
-        interval_2e = F(interval_2)
-        U = min(U, fpu.max(interval_1e)[1])
-        U = min(U, fpu.max(interval_2e)[1])
-        list_of_intervals.append([interval_1, interval_1e])
-        list_of_intervals.append([interval_2, interval_2e])
-        for el in list_of_intervals:
-            if U < fpu.max(el[1])[0]:
-                list_of_intervals.remove(el)
-        list_of_intervals.sort(key=lambda item: fpu.max(item[1])[0])
-        best_interval = list_of_intervals[0]
-        w = fpu.max(best_interval[0])[1] - fpu.max(best_interval[0])[0]
-    return list_of_intervals[0][1]
+def fast_search1(f, D, p, e, e_n, method):  # f(function), D(set), p(start point), e(error)
+    p_0 = p
+    gradient = Gradient(p, f, 0.000001)
+    while np.linalg.norm(gradient) > 0.01:
+        p_0 = p
+        p = argmin1(f, gradient, D, p, e)
+        gradient = Gradient(p, f, 0.000001)
+        # cont = False
+        # for i in range(len(p)):
+        #     if abs(p[i] - D[i][0]) > 0.001 and abs(p[i] - D[i][1]) > 0.001 and abs(gradient[i]) > 0.001:
+        #         cont = True
+        # if not cont:
+        #     break
+        if np.linalg.norm(p - p_0) < 0.00001:
+            break
+    return p
 
 
-# def Moore_Skelboe(f, index, D, p):
-#     e = 0.001
-#     interval_d = D.copy()
-#     for i in range(len(p)):
-#         interval_d[i] = interval[p[i], p[i]]
-#     interval_d[index] = D[index]
-#
-#     interval_e = f(interval_d)
-#     list_of_intervals = [[interval_d, interval_e]]
-#     U = fpu.max(interval_e)[1]
-#     w = len(interval_e)
-#     best_interval = list_of_intervals[0]
-#     while w > e:
-#         list_of_intervals.pop(0)
-#         mid = (fpu.max(best_interval[0][index])[0] + fpu.max(best_interval[0][index])[1]) / 2
-#         interval_1 = best_interval[0].copy()
-#         interval_2 = best_interval[0].copy()
-#         interval_1[index] = interval[fpu.max(best_interval[0][index])[0], mid]
-#         interval_1e = f(interval_1)
-#         interval_2[index] = interval[mid, fpu.max(best_interval[0][index])[1]]
-#         interval_2e = f(interval_2)
-#         U = min(U, fpu.max(interval_1e)[1])
-#         U = min(U, fpu.max(interval_2e)[1])
-#         list_of_intervals.append([interval_1, interval_1e])
-#         list_of_intervals.append([interval_2, interval_2e])
-#         for el in list_of_intervals:
-#             if U < fpu.max(el[1])[0]:
-#                 list_of_intervals.remove(el)
-#         list_of_intervals.sort(key=lambda item: fpu.max(item[1])[0])
-#         best_interval = list_of_intervals[0]
-#         w = fpu.max(best_interval[0][index])[1] - fpu.max(best_interval[0][index])[0]
-#     return fpu.max(list_of_intervals[0][1])[0]
+def Borders(p, gradient, D):
+    max_t = math.inf
+    min_t = -math.inf
+    dir = gradient / np.linalg.norm(gradient)
+    for i in range(len(p)):
+        if dir[i] > 0:
+            max_t = min((D[i][1] - p[i]) / dir[i], max_t)
+            min_t = max((D[i][0] - p[i]) / dir[i], min_t)
+        elif gradient[i] < 0:
+            min_t = max((D[i][1] - p[i]) / dir[i], min_t)
+            max_t = min((D[i][0] - p[i]) / dir[i], max_t)
 
-a = interval[-1, 1]
-b = interval[-1, 1]
-print(Multidimensional_Moore_Skelboe(0.0001, [a, b]))
+    borders = [p + dir * min_t, p + dir * max_t]
+    return borders
+
+
+p = fast_search1(F, [[-10, 10], [-10, 10]], [1, 1], 0.01, 0.001, argmin1)  # point of minimum
+y = F(p)  # minimum value
+print(p)
+print(y)
