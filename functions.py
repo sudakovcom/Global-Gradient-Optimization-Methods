@@ -104,12 +104,12 @@ def F_7_i(x):
 
 # Функция Леви
 def F_8(x):
-    return math.sin(3 * math.pi * x[0]) ** 2 + (x - 1) ** 2 * (1 + math.sin(3 * math.pi * x[1]) ** 2) + (x[1] - 1) ** 2 * (1 + math.sin(
+    return math.sin(3 * math.pi * x[0]) ** 2 + (x[0] - 1) ** 2 * (1 + math.sin(3 * math.pi * x[1]) ** 2) + (x[1] - 1) ** 2 * (1 + math.sin(
         2 * math.pi * x[1]) ** 2)
 
 
 def F_8_i(x):
-    return imath.sin(3 * math.pi * x[0]) ** 2 + (x - 1) ** 2 * (1 + imath.sin(3 * math.pi * x[1]) ** 2) + (x[1] - 1) ** 2 * (1 + imath.sin(
+    return imath.sin(3 * math.pi * x[0]) ** 2 + (x[0] - 1) ** 2 * (1 + imath.sin(3 * math.pi * x[1]) ** 2) + (x[1] - 1) ** 2 * (1 + imath.sin(
         2 * math.pi * x[1]) ** 2)
 
 
