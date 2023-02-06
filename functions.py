@@ -213,7 +213,7 @@ def F_16(x):
     val_2 = 1
     for i in range(n):
         val_1 += x[i] ** 2
-        val_2 *= math.cos(x[i] / math.sqrt(i))
+        val_2 *= math.cos(x[i] / math.sqrt(i + 1))
 
     return val_1 / 4000 - val_2 + 1
 
@@ -300,8 +300,6 @@ def F_20_i(x):
     return -FF_19(x[0]) * FF_19(x[1])
 
 
-
-
 Functions = [F_0, F_0_i,
              F_1, F_1_i,
              F_2, F_2_i,
@@ -316,4 +314,10 @@ Functions = [F_0, F_0_i,
              F_11, F_11_i,
              F_12, F_12_i,
              F_13, F_13_i,
-             F_14, F_14_i]
+             F_14, F_14_i,
+             F_15, F_15_i,
+             F_16, F_16_i,
+             F_17, F_17_i,
+             F_18, F_18_i,
+             F_19, F_19_i,
+             F_20, F_20_i]

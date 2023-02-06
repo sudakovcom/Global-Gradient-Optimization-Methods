@@ -5,12 +5,19 @@ from interval import fpu
 from interval import interval
 from functions import Functions
 
+
 def left(interval):
     return fpu.max(interval)[0]
+
+
 def right(interval):
     return fpu.max(interval)[1]
+
+
 def mid(interval):
     return (fpu.max(interval)[0] + fpu.max(interval)[1]) / 2
+
+
 def norm(p_1, p_2):
     r = 0
     for i in range(len(p_1)):
@@ -57,6 +64,8 @@ def GoldenRatio(func_index, index, a, b, p, e_d, e_f):  # f(function), i(index o
         best_point.append((p_1[i] + p_2[i]) / 2)
 
     return best_point  # point of extremum with error e_d
+
+
 def MooreSkelboe(func_index, index, a, b, p, e_d, e_f):  # F(function), i(index of direction),
     # a(left border), b(right border), p(current point), e_d(error of d), e_f(error of f)
     F = Functions[func_index * 2 + 1]
@@ -102,6 +111,8 @@ def MooreSkelboe(func_index, index, a, b, p, e_d, e_f):  # F(function), i(index 
         best_point.append(mid(best_interval[0][i]))
 
     return best_point
+
+
 def FastSearch(func_index, D, p, e_d, e_f, method):  # F(function), D(set), p(start point), e(error)
     dimension = len(p)
 
