@@ -224,7 +224,7 @@ def F_16_i(x):
     val_2 = 1
     for i in range(n):
         val_1 += x[i] ** 2
-        val_2 *= imath.cos(x[i] / math.sqrt(i))
+        val_2 *= imath.cos(x[i] / math.sqrt(i + 1))
 
     return val_1 / 4000 - val_2 + 1
 
