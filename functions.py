@@ -157,6 +157,32 @@ def F_12_i(x):
     return val / 2
 
 
+# # Функция "крест на подносе"
+# def F_13(x):
+#     return -0.0001 * ((abs(math.sin(x[0]) * math.sin(x[1]) * math.exp(abs(100 - (x[0] ** 2 + x[1] ** 2) ** 0.5 / math.pi)))) + 1) ** 0.1
+#
+#
+# def F_13_i(x):
+#     return -0.0001 * ((abs(imath.sin(x[0]) * imath.sin(x[1]) * imath.exp(abs(100 - (x[0] ** 2 + x[1] ** 2) ** 0.5 / math.pi)))) + 1) ** 0.1
+
+# Функция "подставка для яиц"
+def F_13(x):
+    return -(x[1] + 47) * math.sin(math.sqrt(abs(x[0] / 2 + x[1] + 47))) - x[0] * math.sin(math.sqrt(abs(x[0] - x[1] - 47)))
+
+
+def F_13_i(x):
+    return -(x[1] + 47) * imath.sin(imath.sqrt(abs(x[0] / 2 + x[1] + 47))) - x[0] * imath.sin(imath.sqrt(abs(x[0] - x[1] - 47)))
+
+
+# Табличная функция Хольдера
+def F_14(x):
+    return -abs(math.sin(x[0]) * math.cos(x[1]) * math.exp(abs(1 - math.sqrt(x[0] ** 2 + x[1] ** 2) / math.pi)))
+
+
+def F_14_i(x):
+    return -abs(imath.sin(x[0]) * imath.cos(x[1]) * imath.exp(abs(1 - imath.sqrt(x[0] ** 2 + x[1] ** 2) / math.pi)))
+
+
 Functions = [F_0, F_0_i,
              F_1, F_1_i,
              F_2, F_2_i,
@@ -169,4 +195,7 @@ Functions = [F_0, F_0_i,
              F_9, F_9_i,
              F_10, F_10_i,
              F_11, F_11_i,
-             F_12, F_12_i]
+             F_12, F_12_i,
+             F_13, F_13_i,
+             F_14, F_14_i]
+
