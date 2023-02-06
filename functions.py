@@ -51,7 +51,7 @@ def F_4_i(x):
     return 0.26 * (x[0] ** 2 + x[1] ** 2) - 0.48 * x[0] * x[1]
 
 
-# Функция Растригина
+# Функция Растригина  p32
 def F_5(x):
     n = len(x)
     val = 10 * n
@@ -85,7 +85,7 @@ def F_6_i(x):
     return val
 
 
-# Функция Розенброка
+# Функция Розенброка  p38
 def F_7(x):
     val = 0
     n = len(x)
@@ -113,7 +113,7 @@ def F_8_i(x):
         2 * math.pi * x[1]) ** 2)
 
 
-# Функция Химмельблау
+# Функция Химмельблау   p61
 def F_9(x):
     return (x[0] ** 2 + x[1] - 11) ** 2 + (x[0] + x[1] ** 2 - 7) ** 2
 
@@ -165,7 +165,7 @@ def F_12_i(x):
 # def F_13_i(x):
 #     return -0.0001 * ((abs(imath.sin(x[0]) * imath.sin(x[1]) * imath.exp(abs(100 - (x[0] ** 2 + x[1] ** 2) ** 0.5 / math.pi)))) + 1) ** 0.1
 
-# Функция "подставка для яиц"
+# Функция "подставка для яиц"  p58
 def F_13(x):
     return -(x[1] + 47) * math.sin(math.sqrt(abs(x[0] / 2 + x[1] + 47))) - x[0] * math.sin(math.sqrt(abs(x[0] - x[1] - 47)))
 
@@ -183,6 +183,125 @@ def F_14_i(x):
     return -abs(imath.sin(x[0]) * imath.cos(x[1]) * imath.exp(abs(1 - imath.sqrt(x[0] ** 2 + x[1] ** 2) / math.pi)))
 
 
+# Функция Ackley  p16
+def F_15(x):
+    n = len(x)
+    val_1 = 0
+    val_2 = 0
+    for i in range(n):
+        val_1 += x[i] ** 2
+        val_2 += math.cos(2 * math.pi * x[i])
+
+    return 20 + math.e - 20 * math.exp(-0.2 * math.sqrt(val_1 / n)) - math.exp(val_2 / n)
+
+
+def F_15_i(x):
+    n = len(x)
+    val_1 = 0
+    val_2 = 0
+    for i in range(n):
+        val_1 += x[i] ** 2
+        val_2 += imath.cos(2 * math.pi * x[i])
+
+    return 20 + math.e - 20 * imath.exp(-0.2 * imath.sqrt(val_1 / n)) - imath.exp(val_2 / n)
+
+
+# Функция Гриванка  p23
+def F_16(x):
+    n = len(x)
+    val_1 = 0
+    val_2 = 1
+    for i in range(n):
+        val_1 += x[i] ** 2
+        val_2 *= math.cos(x[i] / math.sqrt(i))
+
+    return val_1 / 4000 - val_2 + 1
+
+
+def F_16_i(x):
+    n = len(x)
+    val_1 = 0
+    val_2 = 1
+    for i in range(n):
+        val_1 += x[i] ** 2
+        val_2 *= imath.cos(x[i] / math.sqrt(i))
+
+    return val_1 / 4000 - val_2 + 1
+
+
+# Функция Растригина новгородская p32
+def F_17(x):
+    n = len(x)
+    val = n
+    for i in range(n):
+        val += x[i] ** 2 - math.cos(18 * math.pi * x[i])
+    return val
+
+
+def F_17_i(x):
+    n = len(x)
+    val = n
+    for i in range(n):
+        val += x[i] ** 2 - imath.cos(18 * math.pi * x[i])
+    return val
+
+
+# Функция Швефеля p44
+
+def F_18(x):
+    n = len(x)
+    val = n * 418.9829
+    for i in range(n):
+        val += x[i] * math.sin(math.sqrt(abs(x[i])))
+    return val
+
+
+def F_18_i(x):
+    n = len(x)
+    val = n * 418.9829
+    for i in range(n):
+        val += x[i] * imath.sin(imath.sqrt(abs(x[i])))
+    return val
+
+
+# Аддитивная потенциальная функция   p52
+
+def FF_19(x):
+    val_1 = -1 / ((x - 1) ** 2 + 0.2)
+    val_2 = -1 / (2 * (x - 2) ** 2 + 0.15)
+    val_3 = -1 / (3 * (x - 3) ** 2 + 0.3)
+
+    return val_1 + val_2 + val_3
+
+
+def F_19(x):
+    return FF_19(x[0]) + FF_19(x[1])
+
+
+def F_19_i(x):
+    return FF_19(x[0]) + FF_19(x[1])
+
+
+# мультипликативная потенциальная функция   p76
+
+def FF_20(x):
+    val_1 = -1 / ((x - 1) ** 2 + 0.2)
+    val_2 = -1 / (2 * (x - 2) ** 2 + 0.15)
+    val_3 = -1 / (3 * (x - 3) ** 2 + 0.3)
+
+    return val_1 + val_2 + val_3
+
+
+def F_20(x):
+    return -FF_19(x[0]) * FF_19(x[1])
+
+
+def F_20_i(x):
+    return -FF_19(x[0]) * FF_19(x[1])
+
+
+
+
 Functions = [F_0, F_0_i,
              F_1, F_1_i,
              F_2, F_2_i,
@@ -198,4 +317,3 @@ Functions = [F_0, F_0_i,
              F_12, F_12_i,
              F_13, F_13_i,
              F_14, F_14_i]
-
