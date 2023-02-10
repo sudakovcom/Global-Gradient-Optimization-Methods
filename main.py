@@ -213,7 +213,7 @@ def GoldenRatioG(func_index, gradient, D, p, e_d, e_f):  # f(function), i(index 
 
 
 
-def MooreSkelboe(func_index, index, a, b, p, e_d, e_f):  # F(function), i(index of direction),
+def MooreSkelboeG(func_index, gradient, D, p, e_d, e_f):  # F(function), i(index of direction),
     # a(left border), b(right border), p(current point), e_d(error of d), e_f(error of f)
     F = Functions[func_index * 2 + 1]
     interval_d = []
