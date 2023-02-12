@@ -13,7 +13,6 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
-
 \usepackage{titlepic}
 \usepackage{graphicx}
 \graphicspath{{./pictures/}}
@@ -25,114 +24,101 @@
 
 \definecolor{bg}{gray}{0.95}
 \DeclareTCBListing{mintedbox}{O{}m!O{}}{%
-  breakable=true,
-  listing engine=minted,
-  listing only,
-  minted language=#2,
-  minted style=default,
-  minted options={%
-    linenos,
-    gobble=0,
-    breaklines=true,
-    breakafter=,,
-    fontsize=\small,
-    numbersep=8pt,
-    #1},
-  boxsep=0pt,
-  left skip=0pt,
-  right skip=0pt,
-  left=25pt,
-  right=0pt,
-  top=3pt,
-  bottom=3pt,
-  arc=5pt,
-  leftrule=0pt,
-  rightrule=0pt,
-  bottomrule=2pt,
-  toprule=2pt,
-  colback=bg,
-  colframe=orange!70,
-  enhanced,
-  overlay={%
-    \begin{tcbclipinterior}
-    \fill[orange!20!white] (frame.south west) rectangle ([xshift=20pt]frame.north west);
-    \end{tcbclipinterior}},
-  #3}
+    breakable=true,
+    listing engine=minted,
+    listing only,
+    minted language=#2,
+    minted style=default,
+    minted options={%
+        linenos,
+        gobble=0,
+        breaklines=true,
+        breakafter=,,
+        fontsize=\small,
+        numbersep=8pt,
+        #1},
+    boxsep=0pt,
+    left skip=0pt,
+    right skip=0pt,
+    left=25pt,
+    right=0pt,
+    top=3pt,
+    bottom=3pt,
+    arc=5pt,
+    leftrule=0pt,
+    rightrule=0pt,
+    bottomrule=2pt,
+    toprule=2pt,
+    colback=bg,
+    colframe=orange!70,
+    enhanced,
+    overlay={%
+        \begin{tcbclipinterior}
+            \fill[orange!20!white] (frame.south west) rectangle ([xshift=20pt]frame.north west);
+        \end{tcbclipinterior}},
+    #3}
 
 
 \begin{document}
 
     \begin{center}
-    \begin{huge}
-    Глобальные градиентные методы оптимизации\\
-    \end{huge}
+        \begin{huge}
+            Глобальные градиентные методы оптимизации\\
+        \end{huge}
 
-    \vspace{1.8cm}
-    \includegraphics[scale=0.3]{logo-vshe}
+        \vspace{1.8cm}
+        \includegraphics[scale=0.3]{logo-vshe}
 
-    \vspace{7cm}
+        \vspace{7cm}
 
-    Факультет компьютерных наук\\
-    Прикладная математика и информатика\\
-    г. Москва\\
+        Факультет компьютерных наук\\
+        Прикладная математика и информатика\\
+        г. Москва\\
 
-    \vspace{1cm}
-    Судаков Илья Александрович\\
-    Февраль 2023\\
+        \vspace{1cm}
+        Судаков Илья Александрович\\
+        Февраль 2023\\
     \end{center}
     \newpage
+    \tableofcontents
+
+
+
+
+    \newpage
+
+
     \section{Введение}
+
+    \subsection{Мотивация}
     Многие методы оптимизации (координатный спуск, градиентный спуск, метод сопряженного гадиента и др.) используют так называемый локальный поиск, т.е. поиск минимума одномерной функции вдоль луча в n-мерном евклидовом пространстве. При этом всегда находится локальный минимум. В проекте предлагается исследовать потенциал применения методов глобальной одномерной оптимизации для организации линейного поиска. В каких случаях удастся найти глобальной минимум многомерной функции, используя глобальный линейный поиск в контексте классических градиентных методов.
 
     \subsection{Задачи проекта}
     \begin{itemize}
         \item Программная реализация методов глобального линейного поиска.
+        \begin{itemize}
+            \item Метод Золотого сечения
+            \item Алгоритм Moore-Skelboe
+        \end{itemize}
         \item Реализация алгоритма оптимизации многомерной функции.
+        \begin{itemize}
+            \item Координатный спуск
+            \item Градиентный спуск
+        \end{itemize}
         \item Экспериментальное и теоретическое исследование.
     \end{itemize}
 
-    \subsection{Ссылка на материалы}
-    \href{https://github.com/sudakovcom/global-optimization.git}{}
-
-
-
-
-
-
-
-
-
-
-    \newpage
-    \section{Координатный спуск}
-    Координатный спуск — это алгоритм оптимизации, который последовательно проводит минимизацию функции вдоль координатных направлений. На очередной итерации, алгоритм фиксирует все координаты, кроме той, вдоль которой будет осуществляться поиск. Так как выбор направления на каждой итерации детерменирован, то нет необходимости наличия производных у функции.\\
-
-
-    Пусть целевая функция имеет вид:
-    $F(\vec{x}): \mathbb{X} \rightarrow \mathbb{R}$\\\\
-    Задача оптимизации задана в следующем виде:
-    $F(\vec{x}) \rightarrow    \underset{\vec{x} \in \mathbb{X}}{\min}$\\\\
-
-
-    \subsection{Алгоритм}
+    \subsection{Цели проекта}
+    Написать алгоритм, который будет находить глобальный минимум многомерной непрерывной функции:
     \begin{itemize}
-        \item Задают начальное приближение и точность расчёта: $X_0, \varepsilon$
-        \item Рассчитывают ${\displaystyle x_{i}^{k+1}={\underset {y\in \mathbb {R} }{\operatorname {arg\,min} }}\;f(x_{1}^{k+1},\dots ,x_{i-1}^{k+1},y,x_{i+1}^{k},\dots ,x_{n}^{k})}$
-        \item Проверяют условие остановки (на усмотрение):
-        \begin{itemize}
-            \item $|x^{[j]}-x^{[j+1]}|<\varepsilon$
-            \item $|F(x^{[j]})-F(x^{[j+1]})|<\varepsilon$
-            \item иначе переходят к пункту 2
-        \end{itemize}
+        \item с хорошей скоростью
+        \item с заданной точностью
+        \item не хуже классических методов для унимодальных функций
     \end{itemize}
 
-    Таким образом, на каждой итерации будет выполнено
-    ${\displaystyle F({x} ^{0})\geqslant F({x} ^{1})\geqslant F({x} ^{2})\geqslant \dots .}$
-
-
-
-
-
+    \subsection{Ссылка на материалы}
+    Ссылка на репозиторий, с разработанными материалами:\\
+    \href{https://github.com/sudakovcom/global-optimization.git}{https://github.com/sudakovcom/global-optimization.git}
 
 
 
@@ -142,7 +128,10 @@
 
 
     \newpage
+
+
     \section{Градиентный спуск}
+    Рассмотрим первый классический метод оптимизации:\\
     Пусть целевая функция имеет вид:
     $F(\vec{x}): \mathbb{X} \rightarrow \mathbb{R}$\\\\
     Задача оптимизации задана в следующем виде:
@@ -224,6 +213,51 @@
 
 
 
+    \newpage
+
+
+    \section{Координатный спуск}
+
+    Расмотрим более простой метод оптимизации, очень похожий на градиентный спуск, который последовательно проводит минимизацию функции вдоль координатных направлений. На очередной итерации, алгоритм фиксирует все координаты, кроме той, вдоль которой будет осуществляться поиск. Так как выбор направления на каждой итерации детерменирован, то нет необходимости наличия производных у функции.\\
+
+
+    Пусть целевая функция имеет вид:
+    $F(\vec{x}): \mathbb{X} \rightarrow \mathbb{R}$\\\\
+    Задача оптимизации задана в следующем виде:
+    $F(\vec{x}) \rightarrow    \underset{\vec{x} \in \mathbb{X}}{\min}$\\\\
+
+    \subsection{Алгоритм}
+    \begin{itemize}
+        \item Задают начальное приближение и точность расчёта: $X_0, \varepsilon$
+        \item Рассчитывают ${\displaystyle x_{i}^{k+1}={\underset {y\in \mathbb {R} }{\operatorname {arg\,min} }}\;f(x_{1}^{k+1},\dots ,x_{i-1}^{k+1},y,x_{i+1}^{k},\dots ,x_{n}^{k})}$
+        \item Проверяют условие остановки (на усмотрение):
+        \begin{itemize}
+            \item $|x^{[j]}-x^{[j+1]}|<\varepsilon$
+            \item $|F(x^{[j]})-F(x^{[j+1]})|<\varepsilon$
+            \item иначе переходят к пункту 2
+        \end{itemize}
+    \end{itemize}
+
+    Таким образом, на каждой итерации будет выполнено
+    ${\displaystyle F({x} ^{0})\geqslant F({x} ^{1})\geqslant F({x} ^{2})\geqslant \dots .}$\\
+
+    Чтобы найти ${\displaystyle x_{i}^{k+1}={\underset {y\in \mathbb {R} }{\operatorname {arg\,min} }}\;f(x_{1}^{k+1},\dots ,x_{i-1}^{k+1},y,x_{i+1}^{k},\dots ,x_{n}^{k})}$ будем использовать так же метод золотого сечения и алгоритм глобальной одномерной оптимизации.
+
+
+
+
+
+
+
+
+
+
+
+
+
+    \newpage
+
+
     \section{Метод золотого сечения}
 
     \subsection{Описание}
@@ -252,6 +286,8 @@
 
 
     \newpage
+
+
     \section{Глобальная одномерная оптимизация}
     Алгоритм поиска глобального минимума функции вдоль одного направления будет основываться на интервальном анализе. Перечислим основные определения и теоремы, которые нам пригодятся для посторения алгоритма.
 
@@ -280,7 +316,6 @@
     \begin{gather*}
         \{f\{x_1,...,x_n\} | x_1 \in \bold{X_1},...,x_n \in \bold{X_n}\} \subset \bold{F(\bold{X_1},...,\bold{X_n}})
     \end{gather*}
-
 
     \subsection{Утверждение}
 
@@ -326,24 +361,26 @@
 
     \newpage
     \newpage
+
+
     \section{Алгоритм Moore-Skelboe}
     Ниже приведена реализация глобального линейного поиска, основанная на интервальном анализе
     \begin{mintedbox}{python}
-def MooreSkelboe(func_index, index, a, b, p, e_d, e_f):  # func_index(number of function in list of functions), index(index of direction),
-    # a(left border), b(right border), p(current point), e_d(error of d), e_f(error of f)
-    F = Functions[func_index * 2 + 1]
-    interval_d = []
-    for i in range(len(p)):
+        def MooreSkelboe(func_index, index, a, b, p, e_d, e_f): # func_index(number of function in list of functions), index(index of direction),
+        # a(left border), b(right border), p(current point), e_d(error of d), e_f(error of f)
+        F = Functions[func_index * 2 + 1]
+        interval_d = []
+        for i in range(len(p)):
         interval_d.append(interval[p[i], p[i]])
-    interval_d[index] = interval[a, b]
+        interval_d[index] = interval[a, b]
 
-    interval_f = F(interval_d)
-    set_of_intervals = [[interval_d, interval_f]]
-    U = right(interval_f)
-    w_f = right(interval_f) - left(interval_f)
-    w_d = right(interval_d[index]) - left(interval_d[index])
-    best_interval = set_of_intervals[0]
-    while (w_d > e_d) | (w_f > e_f):
+        interval_f = F(interval_d)
+        set_of_intervals = [[interval_d, interval_f]]
+        U = right(interval_f)
+        w_f = right(interval_f) - left(interval_f)
+        w_d = right(interval_d[index]) - left(interval_d[index])
+        best_interval = set_of_intervals[0]
+        while (w_d > e_d) | (w_f > e_f):
         set_of_intervals.pop(0)
         mid_p = mid(best_interval[0][index])
         interval_1 = best_interval[0].copy()
@@ -356,9 +393,9 @@ def MooreSkelboe(func_index, index, a, b, p, e_d, e_f):  # func_index(number of 
         U = min(U, right(interval_2_f))
 
         for i in range(len(set_of_intervals)):
-            if U < left(set_of_intervals[i][1]):
-                set_of_intervals = set_of_intervals[:i]
-                break
+        if U < left(set_of_intervals[i][1]):
+        set_of_intervals = set_of_intervals[:i]
+        break
 
         set_of_intervals.append([interval_1, interval_1_f])
         set_of_intervals.append([interval_2, interval_2_f])
@@ -368,14 +405,17 @@ def MooreSkelboe(func_index, index, a, b, p, e_d, e_f):  # func_index(number of 
         w_f = right(best_interval[1]) - left(best_interval[1])
         w_d = right(best_interval[0][index]) - left(best_interval[0][index])
 
-    best_point = []
-    for i in range(len(p)):
+        best_point = []
+        for i in range(len(p)):
         best_point.append(mid(best_interval[0][i]))
 
-    return best_point
+        return best_point
     \end{mintedbox}
     \newpage
+
+
     \section{Тестирование}
+    Ниже приведены результаты тестирования двух методов оптимизации на тестовых функциях, первый использует метод золотого сечения, для поиска минимума вдоль направления, а другой алгоритм Moore-Skelboe.
 
     \subsection{Функция Растригина}
 
@@ -610,17 +650,25 @@ def MooreSkelboe(func_index, index, a, b, p, e_d, e_f):  # func_index(number of 
 
 
 
+
+
+
+
+
+
     \newpage
-    \bibliographystyle{alpha}
-    \bibliography{sample}
 
 
+    \section{Список литературы}
     \begin{itemize}
         \item Сергиенко А. Б. Тестовые функции для глобальной оптимизации.
         \item Пантелеев, Летова: Методы оптимизации в примерах и задачах.
         \item Ratschek, Rokne. New Computer Methods for Global Optimization.
-
     \end{itemize}
 
+
     \section{Первые выводы}
+    Проведя тестирование на 6 функциях, на 5 из них (кроме Розенброка) наш алгоритм справлялся и находил глобальный минимум, когда классические методы находили совсем не то что нужно, что логично. Но так как других методов, с которыми можно сравнить результат моей работы не нашлось, то сравнивал с таким.
+
+
 \end{document}

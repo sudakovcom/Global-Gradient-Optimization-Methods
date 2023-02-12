@@ -1,3 +1,6 @@
+# тут реализованы тестовые функции, чтобы не писать все это в jupyter-notebook
+#
+
 import math
 from interval import imath
 from interval import fpu
