@@ -4,24 +4,29 @@ from interval import fpu
 from interval import interval
 from functions import Functions
 
+
 # возвращает левую границу интервала
 def left(interval):
     return fpu.max(interval)[0]
+
 
 # возвращает правую границу интервала
 def right(interval):
     return fpu.max(interval)[1]
 
+
 # возвращает середину интервала
 def mid(interval):
     return (fpu.max(interval)[0] + fpu.max(interval)[1]) / 2
+
 
 # возвращает евклидово расстояние между 2 векторами
 def norm(p_1, p_2):
     return np.sqrt(np.sum(np.square(np.array(p_1) - np.array(p_2))))
 
 
-def GoldenRatio(func_index, index, a, b, p, e_d, e_f):  # f(function), i(index of direction),
+def GoldenRatio(func_index, index, a, b, p, e_d,
+                e_f):  # f(function), i(index of direction),
     # a(left border), b(right border), p(current point), e_d(error of d), e_f(error of f)
     F = Functions[func_index * 2]
     phi = (1 + np.sqrt(5)) / 2  # constant of golden ratio
@@ -62,7 +67,8 @@ def GoldenRatio(func_index, index, a, b, p, e_d, e_f):  # f(function), i(index o
     return best_point  # point of extremum with error e_d
 
 
-def MooreSkelboe(func_index, index, a, b, p, e_d, e_f):  # func_index(number of function in list of functions), index(index of direction),
+def MooreSkelboe(func_index, index, a, b, p, e_d,
+                 e_f):  # func_index(number of function in list of functions), index(index of direction),
     # a(left border), b(right border), p(current point), e_d(error of d), e_f(error of f)
     F = Functions[func_index * 2 + 1]
     interval_d = []
@@ -93,10 +99,37 @@ def MooreSkelboe(func_index, index, a, b, p, e_d, e_f):  # func_index(number of 
                 set_of_intervals = set_of_intervals[:i]
                 break
 
-        set_of_intervals.append([interval_1, interval_1_f])
-        set_of_intervals.append([interval_2, interval_2_f])
+        val_1 = left(interval_1_f)
+        val_2 = left(interval_2_f)
 
-        set_of_intervals.sort(key=lambda item: left(item[1]))
+        if (len(set_of_intervals) == 0) or (val_1 > left(
+                set_of_intervals[-1][1])):
+            set_of_intervals.append([interval_1, interval_1_f])
+        else:
+            l = 0
+            r = len(set_of_intervals) - 1
+            while l < r:
+                m = int((l + r) / 2)
+                if left(set_of_intervals[m][1]) > val_1:
+                    r = m
+                else:
+                    l = m + 1
+            set_of_intervals.insert(l, [interval_1, interval_1_f])
+
+        if (len(set_of_intervals) == 0) or (
+                val_2 > left(set_of_intervals[-1][1])):
+            set_of_intervals.append([interval_2, interval_2_f])
+        else:
+            l = 0
+            r = len(set_of_intervals) - 1
+            while l < r:
+                m = int((l + r) / 2)
+                if left(set_of_intervals[m][1]) > val_2:
+                    r = m
+                else:
+                    l = m + 1
+            set_of_intervals.insert(l, [interval_2, interval_2_f])
+
         best_interval = set_of_intervals[0]
         w_f = right(best_interval[1]) - left(best_interval[1])
         w_d = right(best_interval[0][index]) - left(best_interval[0][index])
@@ -108,12 +141,16 @@ def MooreSkelboe(func_index, index, a, b, p, e_d, e_f):  # func_index(number of 
     return best_point
 
 
-def FastSearch(func_index, D, p, e_d, e_f, method):  # F(function), D(set), p(start point), e(error)
+def FastSearch(func_index, D, p, e_d, e_f,
+               method):  # F(function), D(set), p(start point), e(error)
     while True:
         p_0 = p
         for index in range(len(p)):
-            p = method(func_index, index, D[index][0], D[index][1], p, e_d, e_f)
-        if (norm(p_0, p) < e_d) & (Functions[func_index * 2](p_0) - Functions[func_index * 2](p) < e_f):
+            p = method(func_index, index, D[index][0], D[index][1], p, e_d,
+                       e_f)
+        if (norm(p_0, p) < e_d) & (
+                Functions[func_index * 2](p_0) - Functions[func_index * 2](
+            p) < e_f):
             break
 
     best_point = p
@@ -121,30 +158,36 @@ def FastSearch(func_index, D, p, e_d, e_f, method):  # F(function), D(set), p(st
 
     return best_point, best_value
 
+
 def print_result(func_num, D, p, e_d, e_f):
-    p_1, v_1 = FastSearch(func_num, D, p, e_d, e_f, GoldenRatio)  # point of minimum
-    p_2, v_2 = FastSearch(func_num, D, p, e_d, e_f, MooreSkelboe)  # point of minimum
+    p_1, v_1 = FastSearch(func_num, D, p, e_d, e_f,
+                          GoldenRatio)  # point of minimum
+    p_2, v_2 = FastSearch(func_num, D, p, e_d, e_f,
+                          MooreSkelboe)  # point of minimum
     print("min of Golden Ratio:", p_1, v_1)
     print("min of Moore-Skelboe:", p_2, v_2)
 
+
 def print_result1(func_num, D, p, e_d, e_f):
-    p_1, v_1 = FastSearch(func_num, D, p, e_d, e_f, GoldenRatio)  # point of minimum
+    p_1, v_1 = FastSearch(func_num, D, p, e_d, e_f,
+                          GoldenRatio)  # point of minimum
     print("Результат тестирования:")
     print("Golden Ratio:", v_1)
 
+
 def print_result2(func_num, D, p, e_d, e_f):
-    p_2, v_2 = FastSearch(func_num, D, p, e_d, e_f, MooreSkelboe)  # point of minimum
+    p_2, v_2 = FastSearch(func_num, D, p, e_d, e_f,
+                          MooreSkelboe)  # point of minimum
     print("Результат тестирования:")
     print("Moore-Skelboe:", v_2)
 
 
-n = 5
+n = 8
 l = -10
 r = 10
 D = [[l, r]] * n
 p = [2] * n
-print_result(15, D, p, 0.001, 0.001)
-
+print_result(7, D, p, 0.001, 0.001)
 
 # def Gradient(D, p, f, step):
 #     gradient = np.array([None] * len(p))
@@ -232,7 +275,6 @@ print_result(15, D, p, 0.001, 0.001)
 #     return best_point  # point of extremum with error e_d
 
 
-
 # def MooreSkelboeG(func_index, gradient, D, p, e_d, e_f):  # F(function), i(index of direction),
 #     # a(left border), b(right border), p(current point), e_d(error of d), e_f(error of f)
 #     F = Functions[func_index * 2 + 1]
@@ -281,11 +323,3 @@ print_result(15, D, p, 0.001, 0.001)
 
 
 # print(FastSearchG(3, [[-10, 10], [-10, 10]], [1, 1], 0.01, 0.01, GoldenRatioG))
-
-
-
-
-
-
-
-
