@@ -7,7 +7,7 @@ from interval import fpu
 from interval import interval
 
 
-# просто функция
+# простая функция
 def F_0(x):
     return (x[0] ** 2) / 2 - (x[1] ** 2) / 4 + 3
 
