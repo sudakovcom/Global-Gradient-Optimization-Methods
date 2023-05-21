@@ -303,6 +303,63 @@ def F_20_i(x):
     return -FF_19(x[0]) * FF_19(x[1])
 
 
+# Levy function
+def F_21(x):
+    n = len(x)
+    for i in range(n):
+        x[i] = 3/4 + x[i]/4
+
+    val = math.sin(math.pi*x[0])**2 + ((x[n-1]-1)**2)*(1+math.sin(2*math.pi*x[n-1])**2)
+    for i in range(1,n-1):
+        val += ((x[i]-1)**2)*(1+10*math.sin(math.pi*x[i]+1)**2)
+    return val
+
+
+def F_21_i(x):
+    n = len(x)
+    for i in range(n):
+        x[i] = 3/4 + x[i]/4
+
+    val = imath.sin(math.pi*x[0])**2 + ((x[n-1]-1)**2)*(1+imath.sin(2*math.pi*x[n-1])**2)
+    for i in range(1,n-1):
+        val += ((x[i]-1)**2)*(1+10*imath.sin(math.pi*x[i]+1)**2)
+    return val
+
+
+# Alpine function
+def F_22(x):
+    n = len(x)
+    val = 0
+    for i in range(n):
+        val += abs(x[i]*math.sin(x[i])+0.1*x[i])
+    return val
+
+
+def F_22_i(x):
+    n = len(x)
+    val = 0
+    for i in range(n):
+        val += abs(x[i]*imath.sin(x[i])+0.1*x[i])
+    return val
+
+# Wave function
+def F_23(x):
+    n = len(x)
+    val = 0
+    for i in range(n):
+        val += x[i]**2
+    val = 1 - (1+math.cos(12*math.sqrt(val)))/(2+0.5*val)
+    return val
+
+# Wave function
+def F_23_i(x):
+    n = len(x)
+    val = 0
+    for i in range(n):
+        val += x[i]**2
+    val = 1 - (1+imath.cos(12*imath.sqrt(val)))/(2+0.5*val)
+    return val
+
 Functions = [F_0, F_0_i,
              F_1, F_1_i,
              F_2, F_2_i,
@@ -323,4 +380,7 @@ Functions = [F_0, F_0_i,
              F_17, F_17_i,
              F_18, F_18_i,
              F_19, F_19_i,
-             F_20, F_20_i]
+             F_20, F_20_i,
+             F_21, F_21_i,
+             F_22, F_22_i,
+             F_23, F_23_i]
